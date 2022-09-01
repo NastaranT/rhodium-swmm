@@ -54,7 +54,8 @@ To help mainstream MORDM applications in GI planning, we developed an open-sourc
 Coming soon
 
 ## Code reference
-Coming soon
+Tebyanian, Nastaran. “NastaranT/Rhodium-Swmm: Rhodium-SWMM Version 1.0 Initial Release.” Zenodo, August 31, 2022. https://doi.org/10.5281/ZENODO.7038551.
+
 
 ## Data 
 The subfolders of data for the stylized problem are described below. The data folder is located in `/example/example_module/data/`.
