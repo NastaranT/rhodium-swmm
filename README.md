@@ -57,7 +57,7 @@ Coming soon
 Coming soon
 
 ## Data 
-The subfolders of data for the stylized problem are described below. the data folder is located in example/example_module/data.
+The subfolders of data for the stylized problem are described below. The data folder is located in `/example/example_module/data/`.
 
 ### Input data
 swwm_data
@@ -80,4 +80,4 @@ other_data
 
 
 ## Reproduce the stylized problem and use Rhodium_SWMM for your data
-Please use README.md in example_module to run Rhodium_SWMM example analysis and see recommendations for applying to your data. 
+Please see `README.md` in `/example/example_module/` to run Rhodium_SWMM example analysis and see recommendations for applying to your data. 
