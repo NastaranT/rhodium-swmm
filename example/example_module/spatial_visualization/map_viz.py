@@ -3,6 +3,7 @@ import geopandas as gpd
 from matplotlib.colors import Normalize
 import matplotlib.pyplot as plt
 import contextily
+import numpy as np 
 
 
 
@@ -54,15 +55,27 @@ col = results_shape.loc[: , "num_br_1":"num_br_100"]
 results_shape['num_br_average'] = (col.mean(axis=1))
 results_shape['num_br_average_to_imp_area']=(results_shape['num_br_average']/results_shape['imp_area'])*100
 results_shape['num_br_2_to_imp_area']=(results_shape['num_br_2']/results_shape['imp_area'])*100
+results_shape['num_br_2_to_imp_area_round']=np.round (results_shape['num_br_2_to_imp_area'], decimals=3)
+for col in results_shape.columns:
+    print (col)
+
+results_shape["center"] = results_shape["geometry"].centroid
+za_points = results_shape.copy()
+za_points.set_geometry("center", inplace = True)
 
 #ax=rc_results_shape.plot( 'num_br_average', edgecolor='gray',scheme="User_Defined", legend=True, cmap= 'RdPu',classification_kwds=dict(bins=[0,25,50,75,100]), norm=Normalize(0, 4 ), alpha=1)
 #ax=rc_results_shape.plot( 'num_br_2_to_imp_area', edgecolor='gray',scheme="User_Defined", legend=True, cmap= 'RdPu',classification_kwds=dict(bins=[0,25,50,75,100]), norm=Normalize(0, 4 ), alpha=1)
-ax=results_shape.plot( 'num_br_2_to_imp_area', edgecolor='gray',scheme="NaturalBreaks", legend=True, cmap= 'RdPu', alpha=1)
-#ax=results_shape.plot( 'num_br_2_to_imp_area', edgecolor='gray',scheme="NaturalBreaks", legend=False, cmap= 'RdPu', alpha=1)
-print(results_shape['num_br_2_to_imp_area'])
+#ax=results_shape.plot( 'num_br_2_to_imp_area', edgecolor='gray',scheme="NaturalBreaks", legend=True, cmap= 'RdPu', alpha=1)
+ax=results_shape.plot( 'num_br_2_to_imp_area', edgecolor='gray', legend=True, cmap= 'RdPu',  alpha=1)
+
+for x, y, label in zip(za_points.geometry.x, za_points.geometry.y, za_points.num_br_2_to_imp_area_round):
+    ax.annotate(label, xy=(x, y), xytext=(3, 3), weight='bold', color='white',backgroundcolor='gray', textcoords="offset points")
+
+
+# print(results_shape['num_br_2_to_imp_area'])
 # contextily.add_basemap (
 #     ax=ax,
-#     crs=rc_results_shape.crs, 
+#     crs=results_shape.crs, 
 #     source=contextily.providers.Stamen.TonerLite,
 # )
 
