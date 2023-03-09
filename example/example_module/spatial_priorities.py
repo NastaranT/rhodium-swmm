@@ -32,29 +32,34 @@ def create_priority_dict():
     
     neighbor_sc = pd.read_csv ("data/other_data/neighboring_subcatchments.csv")
     neighbor_dict = neighbor_sc.groupby('src_Name')['nbr_Name'].apply(list).to_dict()
+    print(neighbor_dict)
     sc_vacant_dict = subcat_info.groupby('Name')['vacant_area'].apply(list).to_dict()
-
+    print(sc_vacant_dict)
 
     def set_value(row_number, assigned_value):
         return assigned_value[row_number]
 
     subcat_info['neighbor_rcs'] =subcat_info['Name'].apply(set_value, args =(neighbor_dict , ))
-
+    print(subcat_info)
 
     subcat_info['aggregation_priority'] = 1
 
 
     for index, row in subcat_info.iterrows():
+        print (index)
         for rc in row['neighbor_rcs']:
+            print("rc---", rc)
             for key in sc_vacant_dict:
+                print ("key----", key)
                 if rc==key:
                     vacant = sc_vacant_dict[key]
+                    print ("vacant-------",vacant)
                     if row["vacant_area"] > 1:
                         subcat_info.at[index, "aggregation_priority"] = 2
                     if row["vacant_area"] > 1 and vacant[0] > 1:
                         subcat_info.at[index, "aggregation_priority"] = 3
 
-
+    print(subcat_info)
 
     aggregation_priority_dict = dict(zip(subcat_info.Name, subcat_info.aggregation_priority))
     vacant_priority_dict = dict(zip(subcat_info.Name, subcat_info.percent_vacant))
@@ -62,4 +67,4 @@ def create_priority_dict():
 
     return (aggregation_priority_dict, vacant_priority_dict, issue_priority_dict)
 
-#print (create_priority_dict())
+print (create_priority_dict())

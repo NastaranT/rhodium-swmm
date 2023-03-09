@@ -25,13 +25,35 @@ class RhodiumSwmmModel():
         DrainageMatLayer.name : DrainageMatLayer
     }
 
-    def __init__(self, node_name, swmm_input_file_template=None, subcatchments = {}, lid_controls = {}, lid_usages = [], responses = []) -> None:
+#-------------------------------------------------------------------------------------------------------node_name
+    # def __init__(self, node_name, swmm_input_file_template=None, subcatchments = {}, lid_controls = {}, lid_usages = [], responses = []) -> None:
+    #     self.subcatchments = subcatchments
+    #     self.lid_controls = lid_controls
+    #     self.lid_usages = lid_usages
+
+    #     self.start_time = time.perf_counter()
+    #     self.node_name = node_name
+
+    #     if swmm_input_file_template is not None:
+    #         self.input_template = self.generate_model_from_swmm_input_file(swmm_input_file_template)
+
+    #     self.rhodium_model = RhodiumModel(swmm_problem)
+
+    #     self.rhodium_model.responses = responses
+    #     for r in responses:
+    #         self.rhodium_model.uncertainties = self.rhodium_model.uncertainties + r.uncertainties
+    #         self.rhodium_model.levers = self.rhodium_model.levers + r.levers
+    #         self.rhodium_model.parameters = self.rhodium_model.parameters + r.parameters
+
+
+#------------------------------------------------------------------------------------------------node_names
+    def __init__(self, node_names, swmm_input_file_template=None, subcatchments = {}, lid_controls = {}, lid_usages = [], responses = []) -> None:
         self.subcatchments = subcatchments
         self.lid_controls = lid_controls
         self.lid_usages = lid_usages
 
         self.start_time = time.perf_counter()
-        self.node_name = node_name
+        self.node_names = node_names
 
         if swmm_input_file_template is not None:
             self.input_template = self.generate_model_from_swmm_input_file(swmm_input_file_template)
@@ -43,8 +65,6 @@ class RhodiumSwmmModel():
             self.rhodium_model.uncertainties = self.rhodium_model.uncertainties + r.uncertainties
             self.rhodium_model.levers = self.rhodium_model.levers + r.levers
             self.rhodium_model.parameters = self.rhodium_model.parameters + r.parameters
-
-
 
 
     def scale_lever(self, obj, parameter, scale_factor, min_range=1, name=""):

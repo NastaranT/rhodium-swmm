@@ -62,6 +62,17 @@ class NodeRunoffVolumeResponse(RhodiumSwmmResponse):
         #return binary_output["average_flowrate"]
         #return binary_output["peak_total_inflow"]
 
+class NodeDepthResponse(RhodiumSwmmResponse):
+
+    def __init__(self, name, node_names, dir=Response.MINIMIZE, **kwargs):
+
+        self.subcat_name=node_names
+       
+        super().__init__(name, dir=dir, **kwargs)
+
+    def calculate(self, swmm_model, binary_output, **kwargs):
+        #return binary_output["runoff"]
+        return binary_output
 
 class CostResponse(RhodiumSwmmResponse):
 

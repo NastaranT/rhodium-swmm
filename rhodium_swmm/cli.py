@@ -9,7 +9,7 @@ from .config import RhodiumSwmmConfig
 import sys
 import os
 import datetime
-
+import random
 
 @click.group()
 @click.option("--reuse", is_flag=True, help="Reuse the results in the current directory if available")
@@ -74,6 +74,13 @@ def find_policy(output_filename, method, response):
         policy = output.find_min(response)
     elif method == "max":
         policy = output.find_max(response)
+    elif method == "random":
+        policy = output[random.randint(0,len(output))]
+    elif method == "exact":
+        
+        policies = output.find(f"2000000<{response} ")
+        policy=policies[random.randint(0,len(policies))]
+
     else:
         raise Exception
 
@@ -83,7 +90,7 @@ def find_policy(output_filename, method, response):
 @cli.command()
 @click.option("--num_SOW", default=100, type=click.IntRange(1,None), help="Set the number of states of the world. Default is 100.")
 @click.option("--optimize_output", type=click.Path(exists=True), help="Output csv from Rhodium-SWMM optimization")
-@click.option("--policy", type=(click.Choice(['min', 'max']), str), default=("min", "RunoffVolume"), help="Takes a response name followed by either min or max. Finds a policy that minimizes or maximizes the specified response.")
+@click.option("--policy", type=(click.Choice(['min', 'max', 'random', 'exact']), str), default=("min", "RunoffVolume"), help="Takes a response name followed by either min or max. Finds a policy that minimizes or maximizes the specified response.")
 def evaluate(num_sow, optimize_output, policy):
     method, response = policy
     return rhodium_swmm_evaluate(find_policy(optimize_output, method, response), num_sow=num_sow)

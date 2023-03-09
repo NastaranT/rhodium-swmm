@@ -7,13 +7,13 @@ from rhodium_swmm.parameters import SwmmPathParameter
 from rhodium_swmm.parameters import RhodiumParameter
 
 from rhodium_swmm import swmm_problem
-from rhodium_swmm.response import CostResponse, CoBenefitResponse, NodeRunoffVolumeResponse
+from rhodium_swmm.response import CostResponse, CoBenefitResponse, NodeRunoffVolumeResponse, NodeDepthResponse
 from rhodium_swmm.model import RhodiumSwmmModel
 from rhodium_swmm.lids import LidUsage
 from rhodium.model import IntegerLever
 from rhodium.model import CategoricalUncertainty
 from rhodium import *
-from .spatial_priorities import create_priority_dict
+#from .spatial_priorities import create_priority_dict
 from rhodium_swmm.response import PriorityResponse
 from rhodium_swmm.cli import cli
 import pandas as pd
@@ -86,20 +86,20 @@ def initialize_rhodium_swmm_model(make_files=True):
 
 
     #assign random vacant percentages to each subcatchment 
-    (aggregation_priority_dict, vacant_priority_dict, issue_priority_dict) = create_priority_dict()
+    #(aggregation_priority_dict, vacant_priority_dict, issue_priority_dict) = create_priority_dict()
     #vacant_priority_dict={'S1': 60, 'S2': 20, 'S3': 100, 'S4': 40, 'S5': 10, 'S6': 80, 'S7': 5 }
 
     #---------------------------------------------------setting the three responses/objectives
     responses = []
-    responses.append(PriorityResponse("VacantPriority", vacant_priority_dict, dir=Response.MAXIMIZE))
+    #responses.append(PriorityResponse("VacantPriority", vacant_priority_dict, dir=Response.MAXIMIZE))
     responses.append(CostResponse("Cost", cost_lid_type=cost_lid_type, install_cost=install_cost, lifetime=lifetime,  OM_per_acre=OM_cost, \
     parameters=[install_cost,OM_cost,lifetime], uncertainties=[install_cost_uncertainty,OM_cost_uncertainty,lifetime_uncertainity]))
-    responses.append(NodeRunoffVolumeResponse("RunoffVolume", node_name=['O1']))
+    responses.append(NodeDepthResponse("AverageMaxDepth", node_names=['J3', 'J4', 'J5']))
     
  
     
     #--------------------------------------------------read the swmm template and set the node name 
-    rhodium_swmm_model = RhodiumSwmmModel(node_name="O1", swmm_input_file_template="data/swmm_data/swwm_input_template/Site_Drainage_Model.inp",   responses=responses)
+    rhodium_swmm_model = RhodiumSwmmModel(node_names=['J3', 'J4', 'J5'], swmm_input_file_template="data/swmm_data/swwm_input_template/Site_Drainage_Model.inp",   responses=responses)
 
     
 
