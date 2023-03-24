@@ -64,9 +64,10 @@ class NodeRunoffVolumeResponse(RhodiumSwmmResponse):
 
 class NodeDepthResponse(RhodiumSwmmResponse):
 
-    def __init__(self, name, node_names, dir=Response.MINIMIZE, **kwargs):
+    def __init__(self, name, node_names, node_elev_csv, dir=Response.MINIMIZE, **kwargs):
 
-        self.subcat_name=node_names
+        self.node_names=node_names
+        self.node_elev_csv=node_elev_csv
        
         super().__init__(name, dir=dir, **kwargs)
 

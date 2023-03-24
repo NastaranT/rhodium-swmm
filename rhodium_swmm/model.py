@@ -47,13 +47,14 @@ class RhodiumSwmmModel():
 
 
 #------------------------------------------------------------------------------------------------node_names
-    def __init__(self, node_names, swmm_input_file_template=None, subcatchments = {}, lid_controls = {}, lid_usages = [], responses = []) -> None:
+    def __init__(self, node_names, node_elev_csv, swmm_input_file_template=None, subcatchments = {}, lid_controls = {}, lid_usages = [], responses = []) -> None:
         self.subcatchments = subcatchments
         self.lid_controls = lid_controls
         self.lid_usages = lid_usages
 
         self.start_time = time.perf_counter()
         self.node_names = node_names
+        self.node_elev_csv = node_elev_csv
 
         if swmm_input_file_template is not None:
             self.input_template = self.generate_model_from_swmm_input_file(swmm_input_file_template)
