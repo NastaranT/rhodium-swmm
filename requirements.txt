@@ -61,6 +61,6 @@ urllib3==1.25.7
 wincertstore==0.2
 XlsxWriter==1.2.7
 zipp==1.0.0
-git+http://github.com/NastaranT/Platypus@rhodium-swmm-compatibility#egg=platypus-opt
+platypus-opt
 git+http://github.com/NastaranT/Rhodium@rhodium-swmm-compatibility#egg=rhodium
 #pyswmm

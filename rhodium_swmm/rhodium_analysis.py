@@ -5,33 +5,35 @@ import os
 from rhodium import *
 from rhodium.config import RhodiumConfig
 from rhodium_swmm import subcatchments
+from .platypus_modifications import ProcessPoolEvaluatorWithInit
 
 from rhodium_swmm.swmm_problem import swmm_problem, max_subcatchment
 from .config import RhodiumSwmmConfig
 from platypus import Hypervolume, calculate, display, experiment
 from rhodium.optimization import _to_problem
 from platypus.algorithms import NSGAII, NSGAIII
+from .platypus_modifications import NSGAII_mod
 import csv
 
-def rhodium_swmm_optimize(algorithm="NSGAII", NFE=1000, output_filename=None):
+def rhodium_swmm_optimize(algorithm="NSGAII_mod", NFE=1000, output_filename=None):
     if output_filename is None:
         output_filename = "optimize-{}-{}.csv".format(algorithm, NFE)
 
     rhodium_swmm_model=RhodiumSwmmConfig.initialize()
     np.random.seed(1234)
-    output = optimize(rhodium_swmm_model.rhodium_model, algorithm, NFE, log_frequency=1, population_size=100)
+    output = optimize(rhodium_swmm_model.rhodium_model, algorithm, NFE, log_frequency=1, population_size=100, module="rhodium_swmm.platypus_modifications")
     output.save(output_filename, format="csv")
 
     os.system("rm -rf */")
 
-def hypervolume_test (algorithm=[NSGAII], NFE=1000, SEEDS=3,output_filename=None):
+def hypervolume_test (algorithm=[NSGAII_mod], NFE=1000, SEEDS=3,output_filename=None):
     if output_filename is None:
         output_filename = "experiment-{}-{}.txt".format(algorithm, NFE)
 
     rhodium_swmm_model=RhodiumSwmmConfig.initialize()
     problem, levers = _to_problem(rhodium_swmm_model.rhodium_model)
     
-    with ProcessPoolEvaluator(20, RhodiumSwmmConfig.parallel_initialize) as evaluator:
+    with ProcessPoolEvaluatorWithInit(20, RhodiumSwmmConfig.parallel_initialize) as evaluator:
         results = experiment(algorithm, [problem], nfe=NFE, seeds=SEEDS, evaluator=evaluator)
         #print(results)
         
@@ -70,13 +72,13 @@ def rhodium_swmm_optimize_borg(algorithm="BorgMOEA", NFE=100, epsilons=0.02,outp
     output = optimize(rhodium_swmm_model.rhodium_model, algorithm, NFE,epsilons=epsilons, module="pyborg", log_frequency=1)
     output.save(output_filename, format="csv")
 
-def rhodium_swmm_robust_optimize(num_sow=100, algorithm="NSGAII", NFE=1000):
+def rhodium_swmm_robust_optimize(num_sow=100, algorithm="NSGAII_mod", NFE=1000):
     rhodium_swmm_model=RhodiumSwmmConfig.initialize()
 
     #SOWs = sample_lhs(rhodium_swmm_model.rhodium_model, num_sow)
     #SOWs.save("sow.csv", format="csv")
     SOWs = load("data/other_data/SOW12.csv", format="csv")[1]
-    output = robust_optimize(rhodium_swmm_model.rhodium_model, SOWs, algorithm, NFE)
+    output = robust_optimize(rhodium_swmm_model.rhodium_model, SOWs, algorithm, NFE, module="rhodium_swmm.platypus_modifications")
     output.save("robust_optimize.csv", format="csv")
 
 def rhodium_swmm_evaluate(policy, num_sow=100):
