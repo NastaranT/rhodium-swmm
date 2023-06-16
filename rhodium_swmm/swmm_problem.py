@@ -66,7 +66,7 @@ def swmm_problem(**kwargs):
     
     swmm_model.check_lid_excess()
     input_template = swmm_model.update_swmm_input_dict_with_model(input_template)
-    swmm_binary_results = swmm_run_from_dict(swmm_model.node_name, input_template)
+    swmm_binary_results = swmm_run_from_dict(swmm_model.subcat_name, input_template)
 
     results = []
     for r in swmm_model.rhodium_model.responses:
