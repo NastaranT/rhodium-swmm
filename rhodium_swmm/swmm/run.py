@@ -4,7 +4,8 @@ from pyswmm import swmm5
 
 run_num = 0
 
-def swmm_run_from_inp(node_name, swmm_input_file_path="swmm.inp",binary_output_path="swmm.out", report_output_path=None, swmm_bin_path="runswmm"):
+#------------------------------------------------------------------------------------get subcatchment stat
+def swmm_run_from_inp(subcat_name, swmm_input_file_path="swmm.inp",binary_output_path="swmm.out", report_output_path=None, swmm_bin_path="runswmm"):
 
     if report_output_path is None:
         if binary_output_path.endswith('.out'):
@@ -18,13 +19,21 @@ def swmm_run_from_inp(node_name, swmm_input_file_path="swmm.inp",binary_output_p
     swmm_model.swmm_start()
     while(swmm_model.swmm_stride(10000) > 0):
         continue
-    outfall = swmm_model.outfall_statistics(node_name)
+    
+    subcat_sum=0
+    for scname in subcat_name:
+        subcat = swmm_model.subcatch_statistics(scname)
+        print(subcat)
+        subcat_sum += subcat['runoff']
+        #subcat_sum += subcat['peak_runoff_rate']
+        print('subcat sum----', subcat_sum)
+        
 
     swmm_model.swmm_end()
     swmm_model.swmm_close()
 
-    return outfall
-    #return node_of_interest
+    return subcat_sum
+
 
 def swmm_run_from_string(node_name, swmm_input_file):
     """Used for not yet working in memory SWMM execution
@@ -43,16 +52,17 @@ def swmm_run_from_string(node_name, swmm_input_file):
     #return node_of_interest
     return outfall
 
-def swmm_run_from_dict(node_name, swmm_input_dict, swmm_input_file_path="swmm.inp",binary_output_path="swmm.out", report_output_path=None, swmm_bin_path="runswmm"):
+#-------------------------------------------------------subcat
+def swmm_run_from_dict(subcat_name, swmm_input_dict, swmm_input_file_path="swmm.inp",binary_output_path="swmm.out", report_output_path=None, swmm_bin_path="runswmm"):
 
     write_dict_to_swmm_input_file(swmm_input_dict=swmm_input_dict, swmm_input_file_path=swmm_input_file_path)
 
-    return swmm_run_from_inp(node_name, swmm_input_file_path=swmm_input_file_path, binary_output_path=binary_output_path, report_output_path=report_output_path, swmm_bin_path=swmm_bin_path)
+    return swmm_run_from_inp(subcat_name, swmm_input_file_path=swmm_input_file_path, binary_output_path=binary_output_path, report_output_path=report_output_path, swmm_bin_path=swmm_bin_path)
 
-def swmm_run_from_dict_to_str(node_name, swmm_input_dict):
+def swmm_run_from_dict_to_str(subcat_name, swmm_input_dict):
     """Used for not yet working in memory SWMM execution
     """
 
     swmm_inp_file = write_dict_to_swmm_input_string(swmm_input_dict=swmm_input_dict)
 
-    return swmm_run_from_string(node_name, swmm_input_file=swmm_inp_file)
+    return swmm_run_from_string(subcat_name, swmm_input_file=swmm_inp_file)
