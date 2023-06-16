@@ -25,14 +25,14 @@ class RhodiumSwmmModel():
         DrainageMatLayer.name : DrainageMatLayer
     }
 
-    #-----------------------------------------------------subcat_name
-    def __init__(self, subcat_name, swmm_input_file_template=None, subcatchments = {}, lid_controls = {}, lid_usages = [], responses = []) -> None:
+    #---------------------------------------outfall
+    def __init__(self, node_name, swmm_input_file_template=None, subcatchments = {}, lid_controls = {}, lid_usages = [], responses = []) -> None:
         self.subcatchments = subcatchments
         self.lid_controls = lid_controls
         self.lid_usages = lid_usages
 
         self.start_time = time.perf_counter()
-        self.subcat_name = subcat_name
+        self.node_name = node_name
 
         if swmm_input_file_template is not None:
             self.input_template = self.generate_model_from_swmm_input_file(swmm_input_file_template)
@@ -44,7 +44,6 @@ class RhodiumSwmmModel():
             self.rhodium_model.uncertainties = self.rhodium_model.uncertainties + r.uncertainties
             self.rhodium_model.levers = self.rhodium_model.levers + r.levers
             self.rhodium_model.parameters = self.rhodium_model.parameters + r.parameters
-
 
 
 
