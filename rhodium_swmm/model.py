@@ -24,6 +24,11 @@ class RhodiumSwmmModel():
         DrainLayer.name : DrainLayer,
         DrainageMatLayer.name : DrainageMatLayer
     }
+    #---------------------------------------node name
+    # def __init__(self, node_name, swmm_input_file_template=None, subcatchments = {}, lid_controls = {}, lid_usages = [], responses = []) -> None:
+    #     self.subcatchments = subcatchments
+    #     self.lid_controls = lid_controls
+    #     self.lid_usages = lid_usages
 
   #-----------------------------------------------------subcat_name
     def __init__(self, subcat_name, swmm_input_file_template=None, subcatchments = {}, lid_controls = {}, lid_usages = [], responses = []) -> None:
@@ -44,8 +49,6 @@ class RhodiumSwmmModel():
             self.rhodium_model.uncertainties = self.rhodium_model.uncertainties + r.uncertainties
             self.rhodium_model.levers = self.rhodium_model.levers + r.levers
             self.rhodium_model.parameters = self.rhodium_model.parameters + r.parameters
-
-
 
 
     def scale_lever(self, obj, parameter, scale_factor, min_range=1, name=""):
